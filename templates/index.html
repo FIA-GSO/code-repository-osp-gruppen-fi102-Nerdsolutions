@@ -3,4 +3,9 @@
 {% block content %}
     <h1>{% block title %} Hilfsgüterlogistik {% endblock %}</h1>
     <h1> {{ variable }} {{ var }} </h1>
+	<ul>
+	{% for i in range(1, 101) %}
+		<li>This is the {{i}}<sup>{% if i % 10 == 1 and i != 11%}st{% elif i % 10 == 2 and i != 12 %}nd{% elif i % 10 == 3 and i != 13%}rd{% else %}th{% endif %}</sup> entry.</li>
+	{% endfor %}
+	</ul>
 {% endblock %}
