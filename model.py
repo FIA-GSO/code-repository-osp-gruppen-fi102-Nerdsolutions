@@ -39,6 +39,7 @@ class BoxItems(Base):
         primary_key=True,
         nullable=False,
         default=lambda: Uuid.uuid4())
+    gtin: Uuid = Column(Uuid)
     description: str = Column(String)
     boxes_guid: Uuid = Column(
         Uuid,
@@ -48,7 +49,7 @@ class BoxItems(Base):
     box = relationship(
         'Boxes',
         foreign_keys=[boxes_guid],  # )
-        lazy='selectin')
+        lazy='selecting')
     quantity: float = Column(Float)
     unit: str = Column(String)
 
@@ -60,6 +61,7 @@ class ItemContents(Base):
         primary_key=True,
         nullable=False,
         default=lambda: Uuid.uuid4())
+    gtin: Uuid = Column(Uuid)
     description: str = Column(String)
     boxItems_guid: Uuid = Column(
         Uuid,
