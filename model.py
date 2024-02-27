@@ -1,10 +1,13 @@
 import enum
-from sqlalchemy import ForeignKey, String, Uuid, Column, Float, create_engine, Date, Enum
-from sqlalchemy.orm import DeclarativeBase, declarative_base, relationship
+import hashlib
 
-# class Base(DeclarativeBase):
-#  pass
-Base = declarative_base()
+from sqlalchemy import ForeignKey, String, Uuid, Column, Float, create_engine, Date, Enum
+from sqlalchemy.orm import DeclarativeBase, relationship, session
+
+
+class Base(DeclarativeBase):
+    pass
+
 
 DB_FILE = 'goods.sqlite'
 DB_CONN = 'sqlite:///' + DB_FILE
@@ -68,6 +71,10 @@ class ItemContents(Base):
         ForeignKey(
             'BoxItems.guid',
             ondelete='CASCADE'))
+    boxItem = relationship(
+        'BoxItems',
+        foreign_keys=[boxItems_guid],  # )
+        lazy='selecting')
     quantity: float = Column(Float)
     unit: str = Column(String)
     expiration_date = Column(Date)
@@ -86,6 +93,13 @@ class User(Base):
     username: str = Column(String)
     password_hash: str = Column(String(40))
     role: str = Column((String(20)))
+
+
+def authenticate(username, password):
+    user = session.query(User).filter_by(username=username).first()
+    if user and user.password_hash == hashlib.sha1(password.encode()).hexdigest():
+        return user
+    return None
 
 
 class Admin(User):
